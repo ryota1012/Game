@@ -13,14 +13,13 @@ public class Dice extends View {
     public Dice(Context context) {
         super(context);
         radius = 30;
-        x = y = 30;
+        x = y = 0;
         paint = new Paint();
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.RED);
+        paint.setStyle(Paint.Style.FILL);
     }
     protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
-        canvas.drawRect(100,200,300,400,paint);
-            }
+        canvas.drawCircle(x, y, radius, paint);
+    }
 }
-
-
