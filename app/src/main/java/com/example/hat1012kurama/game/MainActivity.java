@@ -10,18 +10,21 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Random;
 import java.util.Timer;
 
+import static android.graphics.Color.WHITE;
 import static com.example.hat1012kurama.game.information.count;
 import static com.example.hat1012kurama.game.information.num;
 
@@ -48,12 +51,15 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
+
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        //addContentView(new DrawView(this), params);
+
 
         handler = new Handler();
         handler.postDelayed(this, 10);
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         dice.y = 10;
 
         addContentView(dice, params);
+        //addContentView(new DrawView(this), params);
 
 
         CountDownTimer countDownTimer = new CountDownTimer(100000, 100) {
@@ -99,18 +106,10 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         @Override
         public void onDraw(Canvas canvas) {
             Paint paint1 = new Paint();
-            paint1.setColor(Color.argb(255, 0, 255, 0));
+            paint1.setColor(Color.argb(255, 255, 255, 200));
 
-            Paint paint2 = new Paint();
-            paint2.setColor(Color.argb(255, 0, 0, 255));
-
-            Rect rect = new Rect(100, 200, 300, 400);
-
-            if (block[count] == 0) {
-                canvas.drawRect(rect, paint1);
-            } else {
-                canvas.drawRect(rect, paint2);
-            }
+            Rect rect = new Rect(10, 600, 500, 750);
+            canvas.drawRect(rect,paint1);
 
 
         }
@@ -138,6 +137,12 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         }else{
             dice.color3= Color.GREEN;
         }
+       /* if(information.block[count+3] == 0 ){
+            dice.color4 = Color.BLUE;
+        }else{
+            dice.color4=Color.GREEN;
+        }
+        */
         dice.invalidate();
         handler.postDelayed(this, 10);
 
@@ -164,6 +169,10 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
     public void onGreenButton(View v) {
         if (information.block[count] == 1) {
+
+            TranslateAnimation translate = new TranslateAnimation(0,0,0,150);
+            translate.setDuration(100);
+            dice.startAnimation(translate);
             information.count++;
         } else {
             ((TextView) findViewById(R.id.alert)).setText("だめ！！！！");
@@ -175,6 +184,12 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     public void onBlueButton(View v) {
         if (information.block[count] == 0) {
             information.count++;
+            dice.color1=Color.argb(0,0,0,0);
+
+            TranslateAnimation translate = new TranslateAnimation(0,0,0,150);
+            translate.setDuration(300);
+            dice.startAnimation(translate);
+
         } else {
             ((TextView) findViewById(R.id.alert)).setText("だめ！！！！");
         }
