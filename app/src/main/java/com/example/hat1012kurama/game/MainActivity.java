@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                 ((TextView) findViewById(R.id.countdown)).setText("おわり～～");
             }
         }.start();
+
     }
 
 /*
@@ -116,10 +117,13 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     }
     */
 
+
     @Override
     public void run() {
         //Dice dice = new Dice(this);
-        if (information.block[count] == 0) {
+        if (dice.flag1 == 1) {
+            dice.color1=Color.argb(0,0,0,0);
+        }else if (information.block[count] == 0) {
             dice.x += 3;
             dice.color1=Color.BLUE;
         } else {
@@ -167,13 +171,22 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         handler.removeCallbacks(this);
     }
 
+    public Runnable run1 = new Runnable() {
+        @Override
+        public void run() {
+            information.count++;
+            dice.flag1=0;
+        }
+    };
+
     public void onGreenButton(View v) {
         if (information.block[count] == 1) {
+            dice.flag1=1;
 
             TranslateAnimation translate = new TranslateAnimation(0,0,0,150);
-            translate.setDuration(100);
+            translate.setDuration(50);
             dice.startAnimation(translate);
-            information.count++;
+            handler.postDelayed(run1,50);
         } else {
             ((TextView) findViewById(R.id.alert)).setText("だめ！！！！");
 
@@ -183,12 +196,12 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
     public void onBlueButton(View v) {
         if (information.block[count] == 0) {
-            information.count++;
-            dice.color1=Color.argb(0,0,0,0);
+            dice.flag1=1;
 
             TranslateAnimation translate = new TranslateAnimation(0,0,0,150);
-            translate.setDuration(300);
+            translate.setDuration(100);
             dice.startAnimation(translate);
+            handler.postDelayed(run1,100);
 
         } else {
             ((TextView) findViewById(R.id.alert)).setText("だめ！！！！");
