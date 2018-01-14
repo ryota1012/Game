@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         addContentView(dice, params);
 
 
-        final CountDownTimer countDownTimer = new CountDownTimer(10000, 100) {
+        final CountDownTimer countDownTimer = new CountDownTimer(50000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
                 int time = (int) millisUntilFinished / 1000;
@@ -84,12 +84,12 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                 for (int i = 0; i < 100; i++) {
                     information.block[i] = 2;
                 }
-                //information.count=100;
-/*
-                new AlertDialog.Builder(this)
+
+                new AlertDialog.Builder(MainActivity.this)
                         .setTitle("結果発表")
-                        .setMessage("Congratulations!!\n"+information.count+"回成功");
-                        */
+                        .setMessage("Congratulations!!\n"+information.count+"回成功")
+                        .show();
+
             }
         }.start();
 
@@ -140,12 +140,6 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         } else {
             dice.color3 = Color.GREEN;
         }
-       /* if(information.block[count+3] == 0 ){
-            dice.color4 = Color.BLUE;
-        }else{
-            dice.color4=Color.GREEN;
-        }
-        */
         dice.invalidate();
         handler.postDelayed(this, 10);
 
