@@ -1,6 +1,7 @@
 package com.example.hat1012kurama.game;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -28,32 +29,21 @@ import static android.graphics.Color.WHITE;
 import static com.example.hat1012kurama.game.information.count;
 import static com.example.hat1012kurama.game.information.num;
 
-class information{
+class information {
     static int count = 0;
-    //static int block[] = {1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0};
     static int num = 100;
     static int[] block = new int[num];
 }
+
 public class MainActivity extends AppCompatActivity implements Runnable {
     Dice dice;
-    //static int count = 0;
-    //static int block[] = {1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0};
-    //static int num = 100;
-    //static int[] block= new int[num];
-
-
     Handler handler;
-    Paint paint1 = new Paint();
-    Paint paint2;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
 
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
@@ -65,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         handler.postDelayed(this, 10);
 
         Random rand = new Random();
-        for(int i=0;i<num;i++){
-            information.block[i]= rand.nextInt(2);
+        for (int i = 0; i < num; i++) {
+            information.block[i] = rand.nextInt(2);
         }
 
         Point point = new Point();
@@ -77,13 +67,13 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         dice.y = 10;
 
         addContentView(dice, params);
-        //addContentView(new DrawView(this), params);
 
 
-        CountDownTimer countDownTimer = new CountDownTimer(100000, 100) {
+        final CountDownTimer countDownTimer = new CountDownTimer(10000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
-                ((TextView) findViewById(R.id.countdown)).setText("あと" + millisUntilFinished + "秒");
+                int time = (int) millisUntilFinished / 1000;
+                ((TextView) findViewById(R.id.countdown)).setText("あと" + time + "秒");
                 ((TextView) findViewById(R.id.count)).setText(+count + "回");
 
             }
@@ -91,6 +81,15 @@ public class MainActivity extends AppCompatActivity implements Runnable {
             @Override
             public void onFinish() {
                 ((TextView) findViewById(R.id.countdown)).setText("おわり～～");
+                for (int i = 0; i < 100; i++) {
+                    information.block[i] = 2;
+                }
+                //information.count=100;
+/*
+                new AlertDialog.Builder(this)
+                        .setTitle("結果発表")
+                        .setMessage("Congratulations!!\n"+information.count+"回成功");
+                        */
             }
         }.start();
 
@@ -122,24 +121,24 @@ public class MainActivity extends AppCompatActivity implements Runnable {
     public void run() {
         //Dice dice = new Dice(this);
         if (dice.flag1 == 1) {
-            dice.color1=Color.argb(0,0,0,0);
-        }else if (information.block[count] == 0) {
+            dice.color1 = Color.argb(0, 0, 0, 0);
+        } else if (information.block[count] == 0) {
             dice.x += 3;
-            dice.color1=Color.BLUE;
+            dice.color1 = Color.BLUE;
         } else {
             dice.x += 2;
             dice.y += 2;
-            dice.color1=Color.GREEN;
+            dice.color1 = Color.GREEN;
         }
-        if(information.block[count+1] == 0) {
+        if (information.block[count + 1] == 0) {
             dice.color2 = Color.BLUE;
-        }else{
-            dice.color2= Color.GREEN;
+        } else {
+            dice.color2 = Color.GREEN;
         }
-        if(information.block[count+2] == 0) {
+        if (information.block[count + 2] == 0) {
             dice.color3 = Color.BLUE;
-        }else{
-            dice.color3= Color.GREEN;
+        } else {
+            dice.color3 = Color.GREEN;
         }
        /* if(information.block[count+3] == 0 ){
             dice.color4 = Color.BLUE;
@@ -163,7 +162,6 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
 
-
     }
 
     public void onDestroy() {
@@ -175,20 +173,28 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         @Override
         public void run() {
             information.count++;
-            dice.flag1=0;
+            dice.flag1 = 0;
+        }
+    };
+
+    public Runnable run2 = new Runnable() {
+        public void run() {
+            ((TextView) findViewById(R.id.alert)).setText("");
+
         }
     };
 
     public void onGreenButton(View v) {
         if (information.block[count] == 1) {
-            dice.flag1=1;
+            dice.flag1 = 1;
 
-            TranslateAnimation translate = new TranslateAnimation(0,0,0,150);
+            TranslateAnimation translate = new TranslateAnimation(0, 0, 0, 150);
             translate.setDuration(50);
             dice.startAnimation(translate);
-            handler.postDelayed(run1,50);
+            handler.postDelayed(run1, 50);
         } else {
             ((TextView) findViewById(R.id.alert)).setText("だめ！！！！");
+            handler.postDelayed(run2, 1000);
 
         }
 
@@ -196,15 +202,16 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
     public void onBlueButton(View v) {
         if (information.block[count] == 0) {
-            dice.flag1=1;
+            dice.flag1 = 1;
 
-            TranslateAnimation translate = new TranslateAnimation(0,0,0,150);
+            TranslateAnimation translate = new TranslateAnimation(0, 0, 0, 150);
             translate.setDuration(100);
             dice.startAnimation(translate);
-            handler.postDelayed(run1,100);
+            handler.postDelayed(run1, 100);
 
         } else {
             ((TextView) findViewById(R.id.alert)).setText("だめ！！！！");
+            handler.postDelayed(run2, 1000);
         }
 
     }
